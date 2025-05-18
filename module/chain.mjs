@@ -18,7 +18,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 import { Int, lohi_from_one } from './int64.mjs';
 import { get_view_vector } from './memtools.mjs';
 import { Addr } from './mem.mjs';
-
 import * as config from '../config.mjs';
 
 // put the sycall names that you want to use here
@@ -381,7 +380,7 @@ export class ChainBase {
     }
 
     push_clear_errno() {
-        throw Error('not implemented');
+        throw Error('not implemented'); 
     }
 
     // get the rax register
@@ -529,6 +528,7 @@ export class ChainBase {
         const retval = this._return_value;
         return new Addr(retval[0], retval[1]);
     }
+
 }
 
 export function get_gadget(map, insn_str) {
@@ -542,7 +542,7 @@ export function get_gadget(map, insn_str) {
 
 function load_fw_specific(version) {
     if (version & 0x10000) {
-        throw RangeError('PS5 not supported yet');
+        throw RangeError('ps5 not supported yet');
     }
 
     const value = version & 0xffff;
@@ -550,26 +550,14 @@ function load_fw_specific(version) {
     // ECMAScript 2015. 6.xx WebKit poisons the pointer fields of some types
     // which can be annoying to deal with
     if (value < 0x700) {
-        throw RangeError('PS4 firmwares < 7.00 isn\'t supported');
+        throw RangeError("PS4 firmwares < 7.00 isn't supported");
     }
 
-    if (0x800 <= value && value < 0x850) { // 8.00, 8.01, 8.03
-        return import('../rop/ps4/800.mjs');
+    if (0x800 <= value && value <= 0x900) {
+        return import('../rop/900.mjs');
     }
 
-    if (0x850 <= value && value < 0x900) { // 8.50, 8.52
-        return import('../rop/ps4/850.mjs');
-    }
-
-    if (0x900 <= value && value < 0x950) { // 9.00, 9.03, 9.04
-        return import('../rop/ps4/900.mjs');
-    }
-
-    if (0x950 <= value && value < 0x1000) { // 9.50, 9.51, 9.60
-        return import('../rop/ps4/950.mjs');
-    }
-
-    throw RangeError('Firmware not supported');
+    throw RangeError('firmware not supported');
 }
 
 export let gadgets = null;

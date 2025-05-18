@@ -76,8 +76,8 @@ function ViewMixin(superclass) {
     // isn't one of the built-in TypedArrays. this is a violation of the
     // ECMAScript spec at that time
     //
-    // TODO: Assumes PS4, support PS5 as well
-    // FIXME: Define the from/of workaround functions once
+    // TODO assumes ps4, support ps5 as well
+    // FIXME define the from/of workaround functions once
     if (0x600 <= config.target && config.target < 0x1000) {
         res.from = function from(...args) {
             const base = this.__proto__;

@@ -1,21 +1,27 @@
-TARGET_VERSIONS = 800 850 900 903 950
+TARGET = 900
+ENTRY = 0x900000000
+src = $(TARGET).c
 
 CC = gcc
-OBJCOPY = objcopy
-CFLAGS = -Os -std=gnu11 -Wno-int-conversion -masm=intel -nostartfiles -Tscript.ld
+CFLAGS = -O -Wno-int-conversion -fno-strict-aliasing -masm=intel -nostartfiles
+CFLAGS += -fwrapv -no-pie -Ttext=$(ENTRY) -Tscript.ld -Wl,--build-id=none
+CFLAGS += -fwrapv-pointer -std=gnu11
 
 .PHONY: all
-ALL_SOURCES = $(TARGET_VERSIONS:%=%.c)
-ALL_OBJECTS = $(TARGET_VERSIONS:%=%.o)
-ALL_BINS = $(TARGET_VERSIONS:%=%.bin)
+all: $(TARGET).elf
 
-all: $(ALL_BINS)
-
-%.bin: %.o
-	$(CC) $< -o $*.elf $(CFLAGS)
-	$(OBJCOPY) -O binary --only-section=.text $*.elf $@
-	-rm -f $*.elf
+$(TARGET).elf: $(TARGET).o
+	$(CC) $(TARGET).o -o $(TARGET).elf $(CFLAGS)
 
 .PHONY: clean
 clean:
-	-rm -f $(ALL_OBJECTS) $(ALL_BINS)
+	-rm -f *.d *.o *.elf
+
+%.d: %.c
+	@set -e; \
+	rm -f $@; \
+	$(CC) -MM $(CPPFLAGS) $< > $@.$$$$; \
+	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+	rm -f $@.$$$$;
+
+include $(src:.c=.d)

@@ -1,4 +1,4 @@
-/* Copyright (C) 2024 anonymous
+/* Copyright (C) 2023 anonymous
 
 This file is part of PSFree.
 
@@ -15,14 +15,6 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
-#pragma once
-
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef unsigned long long u64;
-
-typedef signed char s8;
-typedef signed short s16;
-typedef signed int s32;
-typedef signed long long s64;
+export const KB = 1024;
+export const MB = KB * KB;
+export const GB = KB * KB * KB;

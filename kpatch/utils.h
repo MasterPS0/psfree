@@ -21,14 +21,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 #include "types.h"
 
-static inline u64 rdmsr(u32 msr) {
+inline u64 rdmsr(u32 msr) {
     u32 low, high;
 
     asm("rdmsr" : "=a" (low), "=d" (high) : "c" (msr));
     return (low | ((u64)high << 32));
 }
 
-static inline void enable_cr0_wp(void) {
+inline void enable_cr0_wp(void) {
     asm(
         "mov rax, cr0\n"
         "or rax, 0x10000\n"
@@ -36,7 +36,7 @@ static inline void enable_cr0_wp(void) {
     ::: "rax");
 }
 
-static inline void disable_cr0_wp(void) {
+inline void disable_cr0_wp(void) {
     asm(
         "mov rax, cr0\n"
         "and rax, ~0x10000\n"
@@ -44,18 +44,18 @@ static inline void disable_cr0_wp(void) {
     ::: "rax");
 }
 
-static inline void write8(void *addr, size_t offset, u8 value) {
+inline void write8(void *addr, size_t offset, u8 value) {
     *(u8 *)(addr + offset) = value;
 }
 
-static inline void write16(void *addr, size_t offset, u16 value) {
+inline void write16(void *addr, size_t offset, u16 value) {
     *(u16 *)(addr + offset) = value;
 }
 
-static inline void write32(void *addr, size_t offset, u32 value) {
+inline void write32(void *addr, size_t offset, u32 value) {
     *(u32 *)(addr + offset) = value;
 }
 
-static inline void write64(void *addr, size_t offset, u64 value) {
+inline void write64(void *addr, size_t offset, u64 value) {
     *(u64 *)(addr + offset) = value;
 }

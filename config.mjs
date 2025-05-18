@@ -66,19 +66,5 @@ export function set_target(value) {
     target = value;
 }
 
-function get_target_from_ua(useragent) {
-    const pattern = /^Mozilla\/5\.0 \(?(?:PlayStation; )?PlayStation (4|5)[ \/]([0-9]{1,2}\.[0-9]{2})\)? AppleWebKit\/[0-9.]+ \(KHTML, like Gecko\)(?: Version\/[0-9.]+ Safari\/[0-9.]+)?$/;
-    const match = pattern.exec(useragent);
-    if (!match) {
-        return;
-    }
-
-    if (match[1] == '4') {
-        return parseInt(`0x0${match[2].replace('.', '').padStart(4, '0')}`);
-    } else if (match[1] == '5') {
-        return parseInt(`0x1${match[2].replace('.', '').padStart(4, '0')}`);
-    }
-}
-
 export let target = null;
-set_target(get_target_from_ua(navigator.userAgent));
+set_target(0x900);

